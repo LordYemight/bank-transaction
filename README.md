@@ -13,10 +13,10 @@
 
 
 
-     GET
+     GET FOR A SPECIFIC ACCOUNT
      /balance/1234567890
 
-     GET
+     GET BALANCE FOR ALL ACCOUNTS
      /balance
  
 
