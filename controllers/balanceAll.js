@@ -1,4 +1,4 @@
-const Balance = require("../validation/balanceVal")
+const Balance = require("../models/balanceModel")
 
 // Getting all accounts and their balance
 const balanceAll = async (req, res) => {

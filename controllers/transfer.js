@@ -1,6 +1,6 @@
 const transferSchema = require('../validation/transferVal'); 
-const Transaction = require('../validation/transactionsVal');
-const Balance = require('../validation/balanceVal')
+const Transaction = require('../models/transactionsModel');
+const Balance = require('../models/balanceModel')
 
 const transfer = async (req, res) => {
   try {
@@ -21,6 +21,20 @@ const transfer = async (req, res) => {
     if (senderBalance.balance < amount) {
       return res.status(400).json({ error: 'Insufficient funds' });
     }
+
+    // Update the sender's balance
+    senderBalance.balance -= amount;
+    await senderBalance.save();
+  
+    // Update the receiver's balance
+    const receiverBalance = await Balance.findOne({ accountNr: to });
+    
+    if (!receiverBalance) {
+    return res.status(404).json({ error: 'Receiver account not found' });
+    }
+    
+    receiverBalance.balance += amount;
+    await receiverBalance.save();
     
     // Helper function to generate a unique transaction reference
     function generateTransactionReference() {
@@ -38,19 +52,6 @@ const transfer = async (req, res) => {
       transferDescription: 'Money Transfer'
     });
 
-    // Update the sender's balance
-    senderBalance.balance -= amount;
-    await senderBalance.save();
-
-    // Update the receiver's balance
-    const receiverBalance = await Balance.findOne({ accountNr: to });
-
-    if (!receiverBalance) {
-      return res.status(404).json({ error: 'Receiver account not found' });
-    }
-
-    receiverBalance.balance += amount;
-    await receiverBalance.save();
 
     // Save the transaction record to the database
     await transaction.save();

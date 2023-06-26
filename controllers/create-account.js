@@ -1,14 +1,11 @@
-const Balance = require("../validation/balanceVal")
-const Joi = require('joi');
+const Balance = require("../models/balanceModel")
+const createAccountSchema = require("../validation/createAccountVal");
 
   // Enable user to create an account stored in the balance table
   const createAccount = async (req, res) => {
     try {
       // Validate input
-      const { error } = Joi.object({
-        name: Joi.string().required(),
-        amount: Joi.number().positive().required()
-      }).validate(req.body);
+      const { error } = createAccountSchema.validate(req.body);
   
       if (error) {
         return res.status(400).json({ error: error.details[0].message });

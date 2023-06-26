@@ -1,4 +1,5 @@
-const mongoose = require('../models/db');
+const mongoose = require('./db');
+
 
 const transactionSchema = new mongoose.Schema({
   reference: { type: String, unique: true },

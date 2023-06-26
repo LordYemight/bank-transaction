@@ -1,4 +1,4 @@
-const mongoose = require ('../models/db');
+const mongoose = require ('./db');
 
 const balanceSchema = new mongoose.Schema({
   accountNr: { type: String, unique: true },
